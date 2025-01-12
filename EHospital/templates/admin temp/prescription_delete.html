@@ -1,0 +1,25 @@
+
+{% extends 'admin temp/dashboard index.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<br>
+<br>
+
+
+    <form action="" method="post">
+        {% csrf_token %}
+
+            <h3>Are you sure, you want to delete the prescription of {{ prescription.appointment }}</h3>
+
+
+            <input type="submit" value="CONFIRM" class="btn btn-warning">
+
+
+
+    </form>
+<br>
+
+{% endblock %}

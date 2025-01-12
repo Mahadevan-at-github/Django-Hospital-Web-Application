@@ -1,0 +1,30 @@
+{% extends 'admin temp/dashboard index.html' %}
+{% load static %}
+
+
+{% block content %}
+
+
+
+
+<div class="card shadow-lg mb-4">
+  <div class="card-body">
+
+    <!-- Title Section -->
+    <h4 class="card-title">Username</h4>
+    <p class="card-text font-weight-bold">{{ name.username }}</p>
+
+    <!-- Description Section -->
+    <h4 class="card-title mt-3">Name</h4>
+    <p class="card-text">{{ name.f_name }} {{ name.l_name }}</p>
+    
+    <h4 class="card-title mt-3">Contact</h4>
+    <p class="card-text">{{ name.contact }}</p>
+        
+    <h4 class="card-title mt-3">Email</h4>
+    <p class="card-text">{{ name.email }}</p>
+
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'adminfile/index.html' %}
+{% load static %}
+
+{% block content %}
+
+
+
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="row d-flex justify-content-between align-content-center">
+        <div class="col-md-6">
+            <h3>Are you sure, you want to delete {{ book.title }}</h3>
+        </div>
+
+    <div class="col-md-3 d-flex justify-content-center">
+            <input type="submit" value="CONFIRM" class="btn btn-warning">
+
+        </div>
+
+    </div>
+
+
+    </form>
+<br>
+
+{% endblock %}

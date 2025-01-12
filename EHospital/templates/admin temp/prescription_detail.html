@@ -1,0 +1,25 @@
+
+{% extends 'admin temp/dashboard index.html' %}
+{% load static %}
+
+
+{% block content %}
+
+ <!-- Prescription Details Card -->
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h4 class="card-title">Appointment Information</h4>
+      <p class="card-text"><strong>Appointment ID:</strong> {{ prescription.appointment }}</p>
+      
+      <h4 class="card-title">Medication</h4>
+      <p class="card-text"><strong>Medication:</strong> {{ prescription.medication }}</p>
+      
+      <h4 class="card-title">Dosage</h4>
+      <p class="card-text"><strong>Dosage:</strong> {{ prescription.dosage }}</p>
+
+      <h4 class="card-title">Instructions</h4>
+      <p class="card-text"><strong>Instructions:</strong> {{ prescription.instructions }}</p>
+    </div>
+  </div>
+
+{% endblock %}

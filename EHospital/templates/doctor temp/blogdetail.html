@@ -1,0 +1,31 @@
+{% extends 'doctor temp/dashboard index.html' %}
+{% load static %}
+
+
+{% block content %}
+
+
+<!-- Blog Post Card -->
+<div class="card shadow-lg mb-4">
+  <div class="card-body">
+    <!-- Image Section -->
+    <h4 class="card-title text-center mb-4">Blog Image</h4>
+    <div class="text-center mb-4">
+      <img src="{{ blog.image.url }}" class="img-fluid rounded" alt="Blog Image" style="max-width: 100%; height: auto;">
+    </div>
+
+    <!-- Title Section -->
+    <h4 class="card-title">Title</h4>
+    <p class="card-text font-weight-bold">{{ blog.title }}</p>
+
+    <!-- Description Section -->
+    <h4 class="card-title mt-3">Description</h4>
+    <p class="card-text">{{ blog.description }}</p>
+
+    <!-- Content Section -->
+    <h4 class="card-title mt-3">Content</h4>
+    <p class="card-text">{{ blog.content }}</p>
+  </div>
+</div>
+{% endblock %}
+

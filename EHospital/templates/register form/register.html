@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Klinik - Clinic Website Template</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500&family=Roboto:wght@500;700;900&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css' %}" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+    <!-- JavaScript Validation -->
+    <script>
+        function validateForm() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('password2').value;
+            const contact = document.getElementById('contact').value;
+            const phonePattern = /^[0-9]{10}$/; // Basic pattern for a 10-digit phone number
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match!');
+                return false;
+            }
+
+            if (!phonePattern.test(contact)) {
+                alert('Please enter a valid 10-digit phone number!');
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+</head>
+
+<body>
+
+{% block content %}
+
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="card shadow-lg p-4" style="max-width: 600px; width: 100%; border-radius: 15px;">
+        <h2 class="text-center mb-4" style="font-family: 'Roboto', sans-serif; color: #333;">Registration</h2>
+        <form method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="username" class="form-label" style="font-weight: 500;">Username</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="mb-3">
+                <label for="f_name" class="form-label" style="font-weight: 500;">First Name</label>
+                <input type="text" class="form-control" id="f_name" name="f_name" required>
+            </div>
+            <div class="mb-3">
+                <label for="l_name" class="form-label" style="font-weight: 500;">Last Name</label>
+                <input type="text" class="form-control" id="l_name" name="l_name" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label" style="font-weight: 500;">Email</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="mb-3">
+                <label for="contact" class="form-label" style="font-weight: 500;">Contact</label>
+                <input type="tel" class="form-control" id="contact" name="contact" required>
+            </div>
+            <div class="mb-3">
+                <label for="imge" class="form-label" style="font-weight: 500;">Profile Image</label>
+                <input type="file" class="form-control" id="imge" name="imge">
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label" style="font-weight: 500;">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <div class="mb-3">
+                <label for="password2" class="form-label" style="font-weight: 500;">Confirm Password</label>
+                <input type="password" class="form-control" id="password2" name="password2" required>
+            </div>
+            <div class="d-flex justify-content-between mt-4">
+                <button type="submit" class="btn btn-primary w-100" style="background-color: #007bff; border: none; padding: 12px;">Sign Up</button>
+            </div>
+            <div class="text-center mt-3">
+                <p class="mb-0">Already have an account? <a href="{% url 'login' %}" class="text-primary" style="text-decoration: none; font-weight: 500;">Log In</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+</body>
+</html>
+
