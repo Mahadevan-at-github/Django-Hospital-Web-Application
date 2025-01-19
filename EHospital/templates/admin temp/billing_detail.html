@@ -1,0 +1,59 @@
+{% extends 'admin temp/dashboard index.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="card shadow-lg mb-4">
+  <div class="card-body">
+
+    <!-- Title Section -->
+
+    <h4 class="card-title mt-3">Billing Id</h4>
+    <p class="card-text">{{ billing.id }}</p>
+
+    <h4 class="card-title">Biller's Name</h4>
+    <p class="card-text font-weight-bold">{{ billing.full_name }}</p>
+
+    <!-- Description Section -->
+    <h4 class="card-title mt-3">Email</h4>
+    <p class="card-text">{{ billing.email }}</p>
+    
+    <h4 class="card-title mt-3">Phone Number</h4>
+    <p class="card-text">{{ billing.phone_number }}</p>
+
+    <h4 class="card-title mt-3">Address</h4>
+    <p class="card-text">{{ billing.address }}</p>
+
+    <h4 class="card-title mt-3">Country</h4>
+    <p class="card-text">{{ billing.country }}</p>
+
+    <h4 class="card-title mt-3">ZIP Code</h4>
+    <p class="card-text">{{ billing.zip_code }}</p>
+
+    <h4 class="card-title mt-3">Payment Method</h4>
+    <p class="card-text">{{ billing.payment_method }}</p>
+
+    <!-- Show card details only if the payment method is not 'Cash' or 'Net Banking' -->
+    {% if billing.payment_method != "Cash" and billing.payment_method != "Net Banking" %}
+        <h4 class="card-title mt-3">Card Number</h4>
+        <p class="card-text">{{ billing.card_number }}</p>
+
+        <h4 class="card-title mt-3">Card Expiry</h4>
+        <p class="card-text">{{ billing.card_expiry }}</p>
+
+        <h4 class="card-title mt-3">Card CVV</h4>
+        <p class="card-text">{{ billing.card_cvv }}</p>
+
+        <h4 class="card-title mt-3">UPI Id</h4>
+        <p class="card-text">{{ billing.upi_id }}</p>
+    {% endif %}
+
+    <h4 class="card-title mt-3">Transaction Id</h4>
+    <p class="card-text">{{ billing.transaction_id }}</p>
+
+    <h4 class="card-title mt-3">Payment Date</h4>
+    <p class="card-text">{{ billing.payment_date }}</p>
+  </div>
+</div>
+
+{% endblock %}

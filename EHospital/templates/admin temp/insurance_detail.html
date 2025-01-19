@@ -1,0 +1,38 @@
+{% extends 'admin temp/dashboard index.html' %} 
+{% load static %} 
+{% block content %}
+
+<div class="card shadow-lg mb-4">
+  <div class="card-body">
+    <!-- Title Section -->
+    <h4 class="card-title">Plan Name</h4>
+    <p class="card-text font-weight-bold">{{ insurance.plan_name }}</p>
+
+    <!-- Description Section -->
+    <h4 class="card-title mt-3">Provider</h4>
+    <p class="card-text">{{ insurance.provider }}</p>
+
+    <h4 class="card-title mt-3">Coverage Details</h4>
+    <p class="card-text">{{ insurance.coverage_details }}</p>
+
+    <h4 class="card-title mt-3">Monthly Premium</h4>
+    <p class="card-text">{{ insurance.monthly_premium }}</p>
+
+    <h4 class="card-title mt-3">Annual Deductible</h4>
+    <p class="card-text">{{ insurance.annual_deductible }}</p>
+
+    <h4 class="card-title mt-3">Coverage Limit</h4>
+    <p class="card-text">{{ insurance.coverage_limit }}</p>
+
+    <h4 class="card-title mt-3">Insurance Number</h4>
+    <p class="card-text">{{ insurance.insurance_number }}</p>
+
+    <h4 class="card-title mt-3">Start date</h4>
+    <p class="card-text">{{ insurance.start_date }}</p>
+
+    <h4 class="card-title mt-3">End date</h4>
+    <p class="card-text">{{ insurance.end_date }}</p>
+  </div>
+</div>
+
+{% endblock %}

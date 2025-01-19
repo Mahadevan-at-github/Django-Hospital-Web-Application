@@ -1,0 +1,131 @@
+{% extends 'patient temp/patientbase.html' %}
+{% load static %}
+
+{% block contents %}
+  <h1>Purchase Insurance: {{ insurance.plan_name }}</h1>
+
+  <div class="insurance-details">
+    <p><strong>Provider:</strong> {{ insurance.provider }}</p>
+    <p><strong>Coverage Details:</strong> {{ insurance.coverage_details }}</p>
+    <p><strong>Monthly Premium:</strong> ${{ insurance.monthly_premium }}</p>
+    <p><strong>Annual Deductible:</strong> ${{ insurance.annual_deductible }}</p>
+    <p><strong>Coverage Limit:</strong> ${{ insurance.coverage_limit }}</p>
+    <p><strong>Insurance Number:</strong> {{ insurance.insurance_number }}</p>
+    <p><strong>Start Date:</strong> {{ insurance.start_date }}</p>
+    <p><strong>End Date:</strong> {{ insurance.end_date }}</p>
+    <p><strong>Amount to Pay:</strong> ${{ insurance.price }}</p> <!-- Amount to pay -->
+  </div>
+
+  <h2>Billing Information</h2>
+  <form method="POST" class="billing-form" id="purchase-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <h3>Select Payment Method</h3>
+    <div class="payment-options">
+        <label class="payment-option">
+            <input type="radio" name="payment_method_selection" value="Net Banking">
+            <i class="fas fa-university"></i> Net Banking
+        </label>
+        <label class="payment-option">
+            <input type="radio" name="payment_method_selection" value="Cash">
+            <i class="fas fa-money-bill-wave"></i> Cash
+        </label>
+        <label class="payment-option">
+            <input type="radio" name="payment_method_selection" value="Debit Card">
+            <i class="fas fa-credit-card"></i> Debit Card
+        </label>
+        <label class="payment-option">
+            <input type="radio" name="payment_method_selection" value="UPI">
+            <i class="fas fa-mobile-alt"></i> UPI
+        </label>
+    </div>
+
+    <!-- Hidden input field to store selected payment method -->
+    <input type="hidden" id="payment_method" name="payment_method">
+
+    <!-- Dynamic Fields Based on Payment Method -->
+    <div id="payment-details">
+        <div class="payment-detail debit-card-details" style="display: none;">
+            <label for="card_number">Card Number</label>
+            <input type="text" id="card_number" name="card_number" placeholder="Enter your card number" class="form-control" pattern="\d{16}" title="Please enter a 16-digit card number">
+            <label for="card_expiry">Expiry Date</label>
+            <input type="text" id="card_expiry" name="card_expiry" placeholder="MM/YY" class="form-control" pattern="\d{2}/\d{2}" title="Please enter expiry date in MM/YY format">
+            <label for="card_cvv">CVV</label>
+            <input type="text" id="card_cvv" name="card_cvv" placeholder="Enter CVV" class="form-control" pattern="\d{3}" title="Please enter a 3-digit CVV">
+        </div>
+        <div class="payment-detail upi-details" style="display: none;">
+            <label for="upi_id">UPI ID</label>
+            <input type="text" id="upi_id" name="upi_id" placeholder="Enter your UPI ID" class="form-control" pattern="[a-zA-Z0-9._%+-]+@upi" title="Please enter a valid UPI ID">
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Confirm Purchase</button>
+  </form>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const paymentOptions = document.querySelectorAll('.payment-option input');
+        const hiddenPaymentMethodInput = document.getElementById('payment_method');
+        const debitCardDetails = document.querySelector('.debit-card-details');
+        const upiDetails = document.querySelector('.upi-details');
+        const purchaseForm = document.getElementById('purchase-form');
+        const insurancePrice = {{ insurance.price }}; // Pass the insurance price to JavaScript
+
+        paymentOptions.forEach(option => {
+            option.addEventListener('change', function () {
+                hiddenPaymentMethodInput.value = this.value;
+
+                // Hide all dynamic details initially
+                debitCardDetails.style.display = 'none';
+                upiDetails.style.display = 'none';
+
+                // Show relevant details based on selected payment method
+                if (this.value === 'Debit Card') {
+                    debitCardDetails.style.display = 'block';
+                } else if (this.value === 'UPI') {
+                    upiDetails.style.display = 'block';
+                }
+            });
+        });
+
+        // Form validation and payment confirmation before submission
+        purchaseForm.addEventListener('submit', function (e) {
+            let isValid = true;
+
+            // Ensure that a payment method is selected
+            if (!hiddenPaymentMethodInput.value) {
+                alert('Please select a payment method.');
+                isValid = false;
+            }
+
+            // Additional validation for Debit Card and UPI details
+            if (hiddenPaymentMethodInput.value === 'Debit Card') {
+                const cardNumber = document.getElementById('card_number').value;
+                const cardExpiry = document.getElementById('card_expiry').value;
+                const cardCVV = document.getElementById('card_cvv').value;
+                if (!cardNumber || !cardExpiry || !cardCVV) {
+                    alert('Please fill in all the debit card details.');
+                    isValid = false;
+                }
+            } else if (hiddenPaymentMethodInput.value === 'UPI') {
+                const upiId = document.getElementById('upi_id').value;
+                if (!upiId) {
+                    alert('Please enter your UPI ID.');
+                    isValid = false;
+                }
+            }
+
+            if (isValid) {
+                // Confirm the payment amount before submission
+                const confirmation = confirm(`You are about to pay $${insurancePrice}. Do you want to proceed?`);
+                if (!confirmation) {
+                    e.preventDefault(); // Prevent form submission if user cancels
+                }
+            } else {
+                e.preventDefault(); // Prevent form submission if validation fails
+            }
+        });
+    });
+  </script>
+
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'admin temp/dashboard index.html' %}
+{% load static %}
+
+
+{% block content %}
+
+
+
+
+<div class="card shadow-lg mb-4">
+  <div class="card-body">
+
+    <!-- Title Section -->
+
+    <h4 class="card-title mt-3">Order Id</h4>
+    <p class="card-text">{{ orders.id }}</p>
+
+
+    <h4 class="card-title">Insurance</h4>
+    <p class="card-text font-weight-bold">{{ orders.insurance }}</p>
+
+    <!-- Description Section -->
+    <h4 class="card-title mt-3">Order Date</h4>
+    <p class="card-text">{{ orders.order_date }}</p>
+    
+    <h4 class="card-title mt-3">Buyer's name</h4>
+    <p class="card-text">{{ orders.billing_detail.full_name }}</p>
+
+
+  </div>
+</div>
+
+{% endblock %}

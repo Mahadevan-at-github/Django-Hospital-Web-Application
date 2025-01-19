@@ -83,6 +83,28 @@ urlpatterns = [
     path('adminAppointmentDelete/<int:appoin_id>/',views.adminappointmentDelete,name='appointmentdelete'),
 
 
+    path('insurance/create/', views.insurance_create, name='insurance_create'),
+    path('insurance/list/', views.insurance_list, name='insurance_list'),
+    path('insurancedetail/<int:ins_id>/',views.insurance_details,name='insurance_detail'),
+    path('insurance/edit/<int:ins_id>/', views.insurance_edit, name='insurance_edit'),
+    path('insurancedelete/<int:ins_id>/',views.insurance_delete,name='insurance_delete'),
+
+    path('patientinsurance/',views.patient_insurance_list,name='patient_insurance' ),
+    path('purchase/<int:ins_id>/', views.insurance_Details, name='purchase_insurance'),
+    path('purchase/success/<int:order_id>/', views.purchase_success, name='purchase_success'),
+
+
+    path('orders/',views.orders,name='orders'), 
+    path('orderdetail/<int:ord_id>/',views.orderDetails,name='orderdetail'),   
+
+    path('billing/',views.billing,name='billing'), 
+    path('billingdetail/<int:bil_id>/',views.billingDetails,name='billingdetail'),   
+    path('billingstatus/<int:pay_id>/',views.paymentstatus,name='paymentstatus'),
+    path('billingdelete/<int:bil_id>/',views.billing_delete,name='billingdelete'),   
+
+    path('billingpatient/',views.billingpatient,name='billingpatient'), 
+    path('billstatus/<int:bill_id>/',views.billstatus,name='billstatus'),
+    path('billingdetails/<int:bill_id>/',views.billingdetails,name='billingDetails'),   
 
 
 

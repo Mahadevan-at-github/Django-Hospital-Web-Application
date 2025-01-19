@@ -1,0 +1,135 @@
+
+{% extends 'patient temp/patientbase.html' %}
+{% load static %}
+
+
+{% block contents %}
+
+
+    <!-- Page Header Start -->
+    <div class="container-fluid page-header py-5 mb-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container py-5">
+            <h1 class="display-3 text-white mb-3 animated slideInDown">Doctors</h1>
+            <nav aria-label="breadcrumb animated slideInDown">
+                <ol class="breadcrumb text-uppercase mb-0">
+                    <li class="breadcrumb-item"><a class="text-white" href="#">Home</a></li>
+                    <li class="breadcrumb-item"><a class="text-white" href="#">Pages</a></li>
+                    <li class="breadcrumb-item text-primary active" aria-current="page">Doctors</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+
+    <!-- Team Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+                <p class="d-inline-block border rounded-pill py-1 px-4">Insurance</p>
+                <h1>Insurance Provided</h1>
+            </div>
+            <div class="row g-4">
+                {% for ins in insurance %}
+                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="team-item position-relative rounded overflow-hidden">
+                        <div class="team-text bg-light text-center p-4">
+                            <h5>{{ ins.plan_name }}</h5>
+                            <p class="text-primary">Provider : {{ ins.provider }}</p>
+
+                            <div class="team-social text-center">
+                                <a class="btn btn-square"                     
+                                data-bs-toggle="modal"
+                                data-bs-target="#doctorModal{{ ins.id }}" href="">
+                                <i class="fas fa-info-circle"></i></a>
+                                <a class="btn btn-square" href="{% url 'purchase_insurance' ins.id %}"><i class="fa fa-cart-arrow-down"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                  {% endfor %}
+
+            </div>
+            <!-- Pagination controls -->
+<div class="container d-flex mt-5" style="justify-content: center;">    
+    <div class="pagination" style="display: flex; align-items: center; font-family: Arial, sans-serif;">
+        <span class="step-links" style="display: flex; gap: 10px;">
+            {% if insurance.has_previous %}
+                <a href="?page=1" style="text-decoration: none; color: #007bff; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; background-color: #f9f9f9;">&laquo; First</a>
+                <a href="?page={{ insurance.previous_page_number }}" style="text-decoration: none; color: #007bff; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; background-color: #f9f9f9;">Previous</a>
+            {% endif %}
+
+            <span class="current" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; background-color: #f1f1f1; font-weight: bold;">
+                Page {{ insurance.number }} of {{ insurance.paginator.num_pages }}.
+            </span>
+
+            {% if doctors.has_next %}
+                <a href="?page={{ insurance.next_page_number }}" style="text-decoration: none; color: #007bff; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; background-color: #f9f9f9;">Next &raquo;</a>           
+            {% endif %}
+        </span>
+    </div>
+</div>
+
+
+        </div>
+    </div>
+{% for ins in insurance %}
+<div class="modal fade" id="doctorModal{{ ins.id }}" tabindex="-1" aria-labelledby="doctorModalLabel{{ ins.id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="doctorModalLabel{{ ins.id }}">Doctor Profile of &nbsp; {{ ins.plan_name }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="d-flex">
+                    Plan Name: &nbsp;
+                    <span><strong>{{ ins.plan_name }}</strong></span>
+                </p>
+                <p class="d-flex">
+                    Provider: &nbsp;
+                    <span><strong>{{ ins.provider }}</strong></span>
+                </p>
+                <p class="d-flex">
+                    Coverage Detail: &nbsp;
+                    <span><strong>{{ ins.coverage_details }}</strong></span>
+                </p>
+                <p class="d-flex">
+                    Monthly Premium: &nbsp;
+                    <span><strong>{{ ins.monthly_premium }}</strong></span>
+                </p>
+                <p class="d-flex">
+                    Annual Deductible: &nbsp;
+                    <span><strong>{{ ins.annual_deductible }}</strong></span>
+                </p>
+                <p class="d-flex">
+                    Coverage Limit: &nbsp;
+                    <span><strong>{{ ins.coverage_limit }}</strong></span>
+                </p>
+                                <p class="d-flex">
+                    Insurance Number: &nbsp;
+                    <span><strong>{{ ins.insurance_number }}</strong></span>
+                </p>
+                <p class="d-flex">
+                    Insurance Price: &nbsp;
+                    <span><strong>{{ ins.price }}</strong></span>
+                </p>
+                                <p class="d-flex">
+                    Start Date: &nbsp;
+                    <span><strong>{{ ins.start_date }}</strong></span>
+                </p>
+                                <p class="d-flex">
+                    End Date: &nbsp;
+                    <span><strong>{{ ins.end_date }}</strong></span>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+        
+
+{% endblock %}

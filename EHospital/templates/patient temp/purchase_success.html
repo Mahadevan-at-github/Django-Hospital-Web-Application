@@ -1,0 +1,19 @@
+{% extends 'patient temp/patientbase.html' %}
+{% load static %}
+
+
+{% block contents %}
+
+
+  <h2>Purchase Processing</h2>
+  <p>You have Ordered the {{ order.insurance.plan_name }} plan.</p>
+  <h3>Order Details</h3>
+  <p><strong>Order Date:</strong> {{ order.order_date }}</p>
+  <p><strong>Plan:</strong> {{ order.insurance.plan_name }}</p>
+  <p><strong>Provider:</strong> {{ order.insurance.provider }}</p>
+  <p><strong>Billing Name:</strong> {{ order.billing_detail.full_name }}</p>
+  <p><strong>Email:</strong> {{ order.billing_detail.email }}</p>
+  <p><strong>Address:</strong> {{ order.billing_detail.address }}</p>
+  <p><strong>Payment Status:</strong> {{ order.billing_detail.payment_status }}</p>
+  <a href="{% url 'patient_insurance' %}">Back to Insurance List</a>
+{% endblock %}

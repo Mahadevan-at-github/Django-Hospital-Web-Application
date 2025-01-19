@@ -88,7 +88,7 @@ REST_FRAMEWORK = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'hospital',
+        'NAME': 'hospi',
         'USER': 'root',
         'HOST': 'localhost',
         'PORT': '3308',
@@ -140,3 +140,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+STRIPE_PUBLIC_KEY   = 'pk_test_51Qiqf1KQgLQJoTx8UFZ0VwH6e4bOnji3rhrNruSPHFTeg6VdxQahURkEHiFeX7Il5goEnrzEb1egPEerIk1e7iMQ00LhUnrX1g'
+STRIPE_SECRET_KEY   = 'sk_test_51Qiqf1KQgLQJoTx881o35cQxINwKsLfJzYG1KlwPKyEWV06yYNuxJVyTPNTZmLGIaCex3EGBc2xsadCoVy7a8mRS00FL6sbWks'
+

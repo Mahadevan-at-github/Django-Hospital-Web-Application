@@ -12,6 +12,7 @@
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
 
+
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -86,6 +87,7 @@
                 <a href="{% url 'patienthome' %}" class="nav-item nav-link active">Home</a>
                 <a href="{% url 'patientabout' %}" class="nav-item nav-link">About</a>
                 <a href="{% url 'patientservice' %}" class="nav-item nav-link">Service</a>
+                <a href="{% url 'patient_insurance' %}" class="nav-item nav-link">Insurance</a>
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                     <div class="dropdown-menu rounded-0 rounded-bottom m-0">
@@ -93,6 +95,7 @@
                         <a href="{% url 'patientdoctor' %}" class="dropdown-item">Our Doctor</a>
                         <a href="{% url 'patientappointment' %}" class="dropdown-item">Appointment</a>
                         <a href="{% url 'patientblog' %}" class="dropdown-item">Blog</a>
+                        <a href="{% url 'billingpatient' %}" class="dropdown-item">Billing Details</a>
                     </div>
                 </div>
                 <a href="{% url 'patientcontact' %}" class="nav-item nav-link">Contact</a>
@@ -182,7 +185,7 @@
     <script src="{% static 'lib/tempusdominus/js/moment.min.js' %}"></script>
     <script src="{% static 'lib/tempusdominus/js/moment-timezone.min.js' %}"></script>
     <script src="{% static 'lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js' %}"></script>
-
+    <script src="https://js.stripe.com/v3/"></script>
     <!-- Template Javascript -->
     <script src="{% static 'js/main.js' %}"></script>
 </body>

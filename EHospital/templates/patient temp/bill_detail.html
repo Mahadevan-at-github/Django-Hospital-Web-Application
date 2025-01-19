@@ -1,0 +1,78 @@
+{% extends 'patient temp/patientbase.html' %}
+{% load static %}
+
+
+{% block contents %}
+
+
+    <!-- Page Header Start -->
+    <div class="container-fluid page-header py-5 mb-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container py-5">
+            <h1 class="display-3 text-white mb-3 animated slideInDown">Billing Details</h1>
+            <nav aria-label="breadcrumb animated slideInDown">
+                <ol class="breadcrumb text-uppercase mb-0">
+                    <li class="breadcrumb-item"><a class="text-white" href="#">Home</a></li>
+                    <li class="breadcrumb-item"><a class="text-white" href="#">Pages</a></li>
+                    <li class="breadcrumb-item text-primary active" aria-current="page">Billing Details</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+
+<table class="table">
+  <thead>
+    <tr class="text-center">
+      <th scope="col">Sl.No</th>
+      <th scope="col">Billing Id</th>
+      <th scope="col">Biller's Name</th>
+      <th scope="col">Payment Date</th>
+      <th scope="col">Payment Status</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody class="table-group-divider">
+  {% for billing in page %}
+    <tr class="text-center">
+      <th scope="row">{{forloop.counter}}</th>
+      <td>{{ billing.id }}</td>
+      <td>{{ billing.full_name }}</td>
+      <td>{{ billing.payment_date }}</td>
+      <td>{{ billing.payment_status }}</td>
+
+
+      <td class="text-center">
+        <a href="{% url 'billingDetails' billing.id %}" class="btn btn-outline-info">Info</a>
+        <a href="{% url 'billstatus' billing.id %}" class="btn btn-outline-primary">Update Status</a>
+    </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+    {% if page.has_previous %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ page.previous_page_number }}" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    {% endif %}
+
+    {% for num in page.paginator.page_range %}
+    <li class="page-item {% if page.number == num %} activate{% endif %}">
+      <a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+    {% endfor %}
+    {% if page.has_next %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ page.next_page_number }}" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+    {% endif %}
+  </ul>
+</nav>
+
+{% endblock %}

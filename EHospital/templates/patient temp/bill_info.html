@@ -1,0 +1,78 @@
+{% extends 'patient temp/patientbase.html' %}
+{% load static %}
+
+
+{% block contents %}
+
+
+
+    <!-- Page Header Start -->
+    <div class="container-fluid page-header py-5 mb-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container py-5">
+            <h1 class="display-3 text-white mb-3 animated slideInDown">Billing Details</h1>
+            <nav aria-label="breadcrumb animated slideInDown">
+                <ol class="breadcrumb text-uppercase mb-0">
+                    <li class="breadcrumb-item"><a class="text-white" href="#">Home</a></li>
+                    <li class="breadcrumb-item"><a class="text-white" href="#">Pages</a></li>
+                    <li class="breadcrumb-item text-primary active" aria-current="page">Billing Details</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+    
+<div class="card shadow-lg mb-4">
+  <div class="card-body">
+
+    <!-- Title Section -->
+
+    <h4 class="card-title mt-3">Bill Id</h4>
+    <p class="card-text">{{ bill.id }}</p>
+
+    <h4 class="card-title">Biller's Name</h4>
+    <p class="card-text font-weight-bold">{{ bill.full_name }}</p>
+
+    <!-- Description Section -->
+    <h4 class="card-title mt-3">Email</h4>
+    <p class="card-text">{{ bill.email }}</p>
+    
+    <h4 class="card-title mt-3">Phone Number</h4>
+    <p class="card-text">{{ bill.phone_number }}</p>
+
+    <h4 class="card-title mt-3">Address</h4>
+    <p class="card-text">{{ bill.address }}</p>
+
+    <h4 class="card-title mt-3">Country</h4>
+    <p class="card-text">{{ bill.country }}</p>
+
+    <h4 class="card-title mt-3">ZIP Code</h4>
+    <p class="card-text">{{ bill.zip_code }}</p>
+
+    <h4 class="card-title mt-3">Payment Method</h4>
+    <p class="card-text">{{ bill.payment_method }}</p>
+
+    <!-- Show card details only if the payment method is not 'Cash' or 'Net Banking' -->
+    {% if bill.payment_method != "Cash" and bill.payment_method != "Net Banking" %}
+        <h4 class="card-title mt-3">Card Number</h4>
+        <p class="card-text">{{ bill.card_number }}</p>
+
+        <h4 class="card-title mt-3">Card Expiry</h4>
+        <p class="card-text">{{ bill.card_expiry }}</p>
+
+        <h4 class="card-title mt-3">Card CVV</h4>
+        <p class="card-text">{{ bill.card_cvv }}</p>
+
+        <h4 class="card-title mt-3">UPI Id</h4>
+        <p class="card-text">{{ bill.upi_id }}</p>
+    {% endif %}
+
+    <h4 class="card-title mt-3">Transaction Id</h4>
+    <p class="card-text">{{ bill.transaction_id }}</p>
+
+    <h4 class="card-title mt-3">Payment Date</h4>
+    <p class="card-text">{{ bill.payment_date }}</p>
+  </div>
+</div>
+
+{% endblock %}

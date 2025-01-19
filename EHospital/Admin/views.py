@@ -1,12 +1,12 @@
+
 from django.contrib import messages
 from django.db.models import Q
 from django.contrib.auth import logout
-from django.http import Http404
 from django.shortcuts import get_object_or_404, render,redirect
 from django.core.paginator import Paginator,EmptyPage
-from Admin.forms import AppointmentForm, BlogForm,ContactForm,ScheduleForm,PrescriptionForm
+from Admin.forms import AppointmentForm, BillingDetailForm, BlogForm,ContactForm, InsuranceForm, ScheduleForm,PrescriptionForm,PaymentStatusForm
 from Doctor.models import BlogPosting, Prescription
-from .models import AdminPatientTable, LoginTable, AdminDoctorTable,ContactTable
+from .models import AdminPatientTable, BillingDetail, Insurance, LoginTable, AdminDoctorTable, OrderDetail
 from Patient.models import Appointments
 
 # Create your views here.
@@ -780,3 +780,311 @@ def Login(request):
 def logout_view(request):
     logout(request)
     return redirect('home')
+
+
+
+def insurance_create(request):
+    insurance = Insurance.objects.all()
+
+    form = InsuranceForm()
+    if request.method == 'POST':
+            form = InsuranceForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return redirect('insurance_list') 
+
+    return render(request, 'admin temp/insurance_form.html', {'form': form,'insurance': insurance})
+
+
+
+# View to list all insurance information
+def insurance_list(request):
+    insurance = Insurance.objects.all()
+
+    paginator = Paginator(insurance, 5)
+
+    page_number = request.GET.get('page')
+
+    try:
+        page = paginator.get_page(page_number)
+    except EmptyPage:
+        page = paginator.page(page_number.num_pages)
+
+    return render(request,'admin temp/insurance_list.html',{'page':page})
+
+
+# View to edit insurance information
+def insurance_edit (request, ins_id):
+    insurance = get_object_or_404(Insurance, id=ins_id)
+    if request.method == 'POST':
+        form = InsuranceForm(request.POST, instance=insurance)
+        if form.is_valid():
+            form.save()
+            return redirect('insurance_list')
+    else:
+        form = InsuranceForm(instance=insurance)
+    return render(request, 'admin temp/insurance_form.html', {'form': form})
+
+
+def insurance_delete(request,ins_id):
+        insurance = Insurance.objects.get(id=ins_id)
+
+        if request.method == 'POST':
+            insurance.delete()
+
+            return redirect('insurance_list')
+
+        return render(request, 'admin temp/insurance_delete.html', {'insurance': insurance})
+
+
+def insurance_details(request,ins_id):
+
+    insurance = Insurance.objects.get(id=ins_id)
+
+    return render(request, 'admin temp/insurance_detail.html', {'insurance': insurance})
+
+
+def patient_insurance_list(request):
+    insurance = Insurance.objects.all()
+    paginator = Paginator(insurance, 8) 
+
+    page_number = request.GET.get('page')
+    insurance = paginator.get_page(page_number)
+
+
+    return render(request, 'patient temp/patient_insurance_list.html',{'insurance': insurance})
+
+
+def insurancelist(request, ins_id):
+    insurance = AdminDoctorTable.objects.get(id=ins_id)
+    return render(request, 'patient temp/patient_insurance_list.html',{'insurance': insurance})
+
+
+
+
+
+
+
+# stripe.api_key = settings.STRIPE_SECRET_KEY
+
+# def insurance_Details(request, ins_id):
+#     # Get the selected insurance plan based on the provided id
+#     insurance = Insurance.objects.get(id=ins_id)
+
+#     if request.method == 'POST':
+#         form = BillingDetailForm(request.POST)
+#         if form.is_valid():
+#             # Save the Billing Details
+#             billing_details = form.save()
+
+#             # Create an OrderDetail for this insurance and billing details
+#             order = OrderDetail.objects.create(
+#                 billing_detail=billing_details,
+#                 insurance=insurance,
+#                 payment_intent_id=None  # Placeholder for Stripe payment intent
+#             )
+
+#             # Create a PaymentIntent with Stripe (amount in cents)
+#             try:
+#                 payment_intent = stripe.PaymentIntent.create(
+#                     amount=int(insurance.monthly_premium * 100),  # Convert to cents
+#                     currency='inr',  # Adjust currency as needed
+#                     metadata={'order_id': order.id}  # Store order id for future reference
+#                 )
+
+#                 # Save the PaymentIntent ID in the OrderDetail model
+#                 order.payment_intent_id = payment_intent['id']
+#                 order.save()
+
+#                 # Return client secret to frontend
+#                 # return JsonResponse({'client_secret': payment_intent['client_secret']})
+#                 return redirect('purchase_success', order_id=order.id)
+
+#             except stripe.error.StripeError as e:
+#                 return JsonResponse({'error': str(e)})
+
+#     else:
+#         form = BillingDetailForm()
+
+#     return render(request, 'patient temp/purchase_insurance.html', {'insurance': insurance, 'form': form})
+
+def insurance_Details(request, ins_id):
+    # Get the selected insurance plan based on the provided id
+    insurance = get_object_or_404(Insurance, id=ins_id)
+
+    if request.method == 'POST':
+        form = BillingDetailForm(request.POST)
+        if form.is_valid():
+            # Save the Billing Details
+            billing_detail = form.save(commit=False)
+            billing_detail.payment_method = request.POST.get('payment_method')
+
+            # Save additional payment details conditionally
+            if billing_detail.payment_method == 'Debit Card':
+                billing_detail.card_number = request.POST.get('card_number')
+                billing_detail.card_expiry = request.POST.get('card_expiry')
+                billing_detail.card_cvv = request.POST.get('card_cvv')
+            elif billing_detail.payment_method == 'UPI':    
+                billing_detail.upi_id = request.POST.get('upi_id')  # Mark payment as completed
+            
+            billing_detail.save()
+
+            # Create an OrderDetail for this insurance and billing details
+            order = OrderDetail.objects.create(
+                billing_detail=billing_detail,
+                insurance=insurance,
+                payment_intent_id=None  # No payment intent since no gateway is used
+            )
+
+            # Redirect to the success page with the order ID
+            return redirect('purchase_success', order_id=order.id)
+
+    else:
+        form = BillingDetailForm()
+
+    return render(request, 'patient temp/purchase_insurance.html', {        
+        'insurance': insurance,
+        'form': form,
+        'insurance_price': insurance.price
+    })
+
+
+def purchase_success(request, order_id):
+    order = get_object_or_404(OrderDetail, id=order_id)
+    return render(request, 'patient temp/purchase_success.html', {'order': order})
+
+
+
+# def purchase_success(request, order_id):
+#     try:
+#         order = OrderDetail.objects.get(id=order_id)
+#         # Retrieve PaymentIntent
+#         payment_intent = stripe.PaymentIntent.retrieve(order.payment_intent_id)
+
+#         if payment_intent['status'] == 'succeeded':
+#             order.billing_detail.payment_status = 'Paid'
+#             order.billing_detail.save()
+#             return render(request, 'purchase_success.html', {'order': order})
+#         else:
+#             return render(request, 'purchase_failed.html')
+
+#     except OrderDetail.DoesNotExist:
+#         return redirect('insurance_details', ins_id=order.insurance.id)
+
+
+
+def orders(request):
+
+    orders = OrderDetail.objects.all()
+
+    paginator = Paginator(orders, 5)
+
+    page_number = request.GET.get('page')
+
+    try:
+        page = paginator.get_page(page_number)
+    except EmptyPage:
+        page = paginator.page(page_number.num_pages)
+
+    return render(request,'admin temp/orders.html',{'page':page})
+
+
+def orderDetails(request,ord_id):
+
+    orders = OrderDetail.objects.get(id=ord_id)
+
+    return render(request, 'admin temp/order_detail.html', {'orders': orders})
+
+
+
+
+def billing(request):
+
+    billing = BillingDetail.objects.all()
+
+    paginator = Paginator(billing, 5)
+
+    page_number = request.GET.get('page')
+
+    try:
+        page = paginator.get_page(page_number)
+    except EmptyPage:
+        page = paginator.page(page_number.num_pages)
+
+    return render(request,'admin temp/billing.html',{'page':page})
+
+
+
+def billingDetails(request,bil_id):
+
+    billing = BillingDetail.objects.get(id=bil_id)
+
+    return render(request, 'admin temp/billing_detail.html', {'billing': billing})
+
+
+
+def paymentstatus(request,pay_id):
+
+    billing = BillingDetail.objects.get(id=pay_id)
+
+    if request.method=='POST':
+        form = PaymentStatusForm(request.POST,instance=billing)
+
+        if form.is_valid():
+            form.save()
+            return redirect('billing')
+    else:
+        form=PaymentStatusForm(instance=billing)
+    return render(request,'admin temp/payment_status.html',{'form':form})
+
+
+def billing_delete(request,bil_id):
+        billing = BillingDetail.objects.get(id=bil_id)
+
+        if request.method == 'POST':
+            billing.delete()
+
+            return redirect('billing')
+
+        return render(request, 'admin temp/billing_delete.html', {'billing': billing})
+
+
+def billingpatient(request):
+    billing = BillingDetail.objects.all()
+
+    paginator = Paginator(billing, 5)
+
+    page_number = request.GET.get('page')
+
+    try:
+        page = paginator.get_page(page_number)
+    except EmptyPage:
+        page = paginator.page(page_number.num_pages)
+
+    return render(request,'patient temp/bill_detail.html',{'page':page})
+
+
+def billstatus(request,bill_id):
+
+    bill = BillingDetail.objects.get(id=bill_id)
+
+    if request.method=='POST':
+        form = PaymentStatusForm(request.POST,instance=bill)
+
+        if form.is_valid():
+            form.save()
+            return redirect('billingpatient')
+    else:
+        form=PaymentStatusForm(instance=bill)
+    return render(request,'patient temp/bill_status.html',{'form':form})
+
+
+def billingdetails(request,bill_id):
+
+    bill = BillingDetail.objects.get(id=bill_id)
+
+    return render(request, 'patient temp/bill_info.html', {'bill': bill})
+
+
+
+
